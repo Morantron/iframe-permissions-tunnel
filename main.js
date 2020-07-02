@@ -1,65 +1,16 @@
-import regeneratorRuntime from "@babel/runtime/regenerator";
-import { v4 as uuidv4 } from "uuid";
+import "regenerator-runtime/runtime";
 
-const onMessage = (type, callback) => {
-  const enhancedCallback = event => {
-    let message;
+import { postMessage, onMessage, onMessageOnce } from "./lib/messaging";
+import { timeout } from "./lib/async";
 
-    try {
-      message = JSON.parse(event.data);
-    } catch (e) {
-      message = null;
-    }
-
-    if (
-      !message ||
-      !message._iframe_permissions_tunnel ||
-      (type !== "*" && message.type !== type)
-    ) {
-      return;
-    }
-
-    callback(message);
-  };
-
-  window.addEventListener("message", enhancedCallback);
-
-  return () => window.removeEventListener("message", enhancedCallback);
-};
-
-const konsole = {
-  log: (...args) => console.log(isInIframe ? "[iframe]" : "[top]", ...args)
-};
-
-const onMessageOnce = (type, callback) => {
-  let unsubscribe = onMessage(type, () => {
-    callback();
-    unsubscribe();
+const waitForEvent = eventType => {
+  return new Promise(resolve => {
+    window.addEventListener(eventType, () => {
+      console.log("received event", eventType);
+      resolve(eventType);
+    });
   });
 };
-
-const postMessage = (target, payload, { wait = false } = {}) =>
-  new Promise((resolve, reject) => {
-    if (!payload.id) {
-      const id = uuidv4();
-      payload.id = id;
-    }
-
-    payload._iframe_permissions_tunnel = true;
-
-    if (wait) {
-      const unsubscribe = onMessage("*", message => {
-        if (message.id === payload.id && message.result) {
-          unsubscribe();
-          resolve(message.result);
-        }
-      });
-    } else {
-      resolve();
-    }
-
-    target.postMessage(JSON.stringify(payload), "*");
-  });
 
 const isInIframe = (() => {
   try {
@@ -69,20 +20,12 @@ const isInIframe = (() => {
   }
 })();
 
-const NullPermissionGranter = { requestPermission: async () => "granted" };
+const nullPermissionGranter = async () => "granted";
 
-const PermissionGranterByEventType = {
-  deviceorientation:
-    DeviceMotionEvent.requestPermission || NullPermissionGranter,
-  orientationchange:
-    DeviceOrientationEvent.requestPermission || NullPermissionGranter
-};
+const permissionGranter =
+  DeviceMotionEvent.requestPermission || nullPermissionGranter;
 
-const eventSerializerByEventType = {
-  deviceorientation: ({ alpha, beta, gamma }) => ({ alpha, beta, gamma })
-};
-
-const identity = a => a;
+const serializeEvent = ({ alpha, beta, gamma }) => ({ alpha, beta, gamma });
 
 /**
  * Calls the method on the parent iframe
@@ -110,52 +53,80 @@ const callOnTopFrame = (target, key, descriptor) => {
 };
 
 export class PermissionsTunnelClass {
-  constructor({ content, css } = {}) {
+  constructor() {
     this.callbacks = {};
-    this.content = content;
-    this.css = css;
 
     if (isInIframe) {
       this.waitForHandshake();
     }
   }
 
-  async addEventListener(eventType, callback) {
-    const isPermissionGranted = await this.requestPermissionFor(eventType);
+  async onOrientationChange(callback) {
+    let isPermissionGranted = await this.isPermissionGranted();
 
     if (!isPermissionGranted) {
+      console.warn("Could not add listener, permission not granted");
       return;
     }
 
-    if (isInIframe) {
-      this.registerCallback(eventType, callback);
+    this.registerCallback("deviceorientation", callback);
 
-      onMessage(`${eventType}-callback`, ({ args }) => {
-        this.callbacks[eventType].forEach(cb => cb(...args));
-      });
-    }
+    onMessage("deviceorientation-callback", ({ args }) => {
+      this.triggerCallbacks("deviceorientation", args);
+    });
 
-    this.setupEventForwarding(eventType);
+    this.setupEventForwarding();
+  }
+
+  onPermissionRequested(cb) {
+    this.registerCallback("permission:requested", cb);
+  }
+
+  onPermissionGranted(cb) {
+    this.registerCallback("permission:granted", cb);
+  }
+
+  onPermissionDenied(cb) {
+    this.registerCallback("permission:denied", cb);
   }
 
   @callOnTopFrame
-  async setupEventForwarding(eventType) {
-    const eventSerializer = eventSerializerByEventType[eventType] || identity;
-
-    window.addEventListener(eventType, event => {
+  async setupEventForwarding() {
+    window.addEventListener("deviceorientation", event => {
       postMessage(this.forwardTarget, {
-        type: `${eventType}-callback`,
-        args: [eventSerializer(event)]
+        type: "deviceorientation-callback",
+        args: [serializeEvent(event)]
       });
     });
   }
 
   @callOnTopFrame
-  async requestPermissionFor(eventType) {
-    const granter =
-      PermissionGranterByEventType[eventType] || NullPermissionGranter;
+  async isPermissionGranted() {
+    let result;
 
-    return (await granter.requestPermission()) === "granted";
+    try {
+      await timeout(waitForEvent("deviceorientation"), 200);
+      result = true;
+    } catch (e) {
+      console.error(e);
+      result = false;
+    }
+
+    return result;
+  }
+
+  @callOnTopFrame
+  async requestPermission() {
+    this.triggerCallbacks("permission:requested");
+    let result = await permissionGranter();
+
+    if (result === "granted") {
+      this.triggerCallbacks("permission:granted");
+    } else {
+      this.triggerCallbacks("permission:denied");
+    }
+
+    return result;
   }
 
   /**
@@ -181,6 +152,7 @@ export class PermissionsTunnelClass {
     return new Promise(resolve => {
       if (this.handshakeReceived) {
         resolve();
+        return;
       }
 
       onMessageOnce("handshake", message => {
@@ -208,12 +180,16 @@ export class PermissionsTunnelClass {
     });
   }
 
-  registerCallback(eventType, callback) {
-    if (!this.callbacks[eventType]) {
-      this.callbacks[eventType] = [];
+  registerCallback(callbackName, callback) {
+    if (!this.callbacks[callbackName]) {
+      this.callbacks[callbackName] = [];
     }
 
-    this.callbacks[eventType].push(callback);
+    this.callbacks[callbackName].push(callback);
+  }
+
+  triggerCallbacks(callbackName, args = []) {
+    (this.callbacks[callbackName] || []).forEach(cb => cb(args));
   }
 }
 
