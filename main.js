@@ -6,7 +6,6 @@ import { timeout } from "./lib/async";
 const waitForEvent = eventType => {
   return new Promise(resolve => {
     window.addEventListener(eventType, () => {
-      console.log("received event", eventType);
       resolve(eventType);
     });
   });

@@ -916,7 +916,6 @@
   var waitForEvent = function waitForEvent(eventType) {
     return new Promise(function (resolve) {
       window.addEventListener(eventType, function () {
-        console.log("received event", eventType);
         resolve(eventType);
       });
     });
