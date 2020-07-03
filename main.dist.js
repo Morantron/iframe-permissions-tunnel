@@ -983,7 +983,7 @@
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return target.waitForHandshake();
+                return this.waitForHandshake();
 
               case 2:
                 for (_len = _args2.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
@@ -1008,7 +1008,7 @@
                 return _context2.stop();
             }
           }
-        }, _callee2);
+        }, _callee2, this);
       }));
     }
   };
@@ -1018,6 +1018,7 @@
       _classCallCheck(this, PermissionsTunnelClass);
 
       this.callbacks = {};
+      this.handshakeReceived = false;
 
       if (isInIframe) {
         this.waitForHandshake();

@@ -33,8 +33,8 @@ const callOnTopFrame = (target, key, descriptor) => {
   let original = descriptor.value;
 
   if (isInIframe) {
-    descriptor.value = async (...args) => {
-      await target.waitForHandshake();
+    descriptor.value = async function(...args) {
+      await this.waitForHandshake();
 
       let result = await postMessage(
         window.parent,
@@ -54,6 +54,7 @@ const callOnTopFrame = (target, key, descriptor) => {
 export class PermissionsTunnelClass {
   constructor() {
     this.callbacks = {};
+    this.handshakeReceived = false;
 
     if (isInIframe) {
       this.waitForHandshake();
