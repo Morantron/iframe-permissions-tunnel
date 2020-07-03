@@ -66,8 +66,8 @@ const iframeSetup = async () => {
   }
 };
 
-if (isInIframe) {
-  ready(iframeSetup);
-} else {
-  ready(topSetup);
-}
+//if (isInIframe) {
+ready(iframeSetup);
+//} else {
+//ready(topSetup);
+//}

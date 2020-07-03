@@ -1050,15 +1050,21 @@
                   return _context3.abrupt("return");
 
                 case 6:
-                  this.registerCallback("deviceorientation", callback);
-                  onMessage("deviceorientation-callback", function (_ref4) {
-                    var args = _ref4.args;
+                  if (isInIframe) {
+                    this.registerCallback("deviceorientation", callback);
+                    onMessage("deviceorientation-callback", function (_ref4) {
+                      var args = _ref4.args;
 
-                    _this.triggerCallbacks("deviceorientation", args);
-                  });
-                  this.setupEventForwarding();
+                      _this.triggerCallbacks("deviceorientation", args);
+                    });
+                    this.setupEventForwarding();
+                  } else {
+                    window.addEventListener("deviceorientation", function (event) {
+                      return callback(serializeEvent(event));
+                    });
+                  }
 
-                case 9:
+                case 7:
                 case "end":
                   return _context3.stop();
               }

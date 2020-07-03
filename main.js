@@ -68,13 +68,19 @@ export class PermissionsTunnelClass {
       return;
     }
 
-    this.registerCallback("deviceorientation", callback);
+    if (isInIframe) {
+      this.registerCallback("deviceorientation", callback);
 
-    onMessage("deviceorientation-callback", ({ args }) => {
-      this.triggerCallbacks("deviceorientation", args);
-    });
+      onMessage("deviceorientation-callback", ({ args }) => {
+        this.triggerCallbacks("deviceorientation", args);
+      });
 
-    this.setupEventForwarding();
+      this.setupEventForwarding();
+    } else {
+      window.addEventListener("deviceorientation", event =>
+        callback(serializeEvent(event))
+      );
+    }
   }
 
   onPermissionRequested(cb) {

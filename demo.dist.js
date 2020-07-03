@@ -1049,15 +1049,21 @@
                   return _context3.abrupt("return");
 
                 case 6:
-                  this.registerCallback("deviceorientation", callback);
-                  onMessage("deviceorientation-callback", function (_ref4) {
-                    var args = _ref4.args;
+                  if (isInIframe) {
+                    this.registerCallback("deviceorientation", callback);
+                    onMessage("deviceorientation-callback", function (_ref4) {
+                      var args = _ref4.args;
 
-                    _this.triggerCallbacks("deviceorientation", args);
-                  });
-                  this.setupEventForwarding();
+                      _this.triggerCallbacks("deviceorientation", args);
+                    });
+                    this.setupEventForwarding();
+                  } else {
+                    window.addEventListener("deviceorientation", function (event) {
+                      return callback(serializeEvent(event));
+                    });
+                  }
 
-                case 9:
+                case 7:
                 case "end":
                   return _context3.stop();
               }
@@ -1321,23 +1327,6 @@
     return alert(error);
   };
 
-  var topSetup = function topSetup() {
-    var iframe = document.getElementById("iframe");
-    PermissionsTunnel.forwardTo(iframe.contentWindow);
-    PermissionsTunnel.onPermissionRequested(function () {
-      alert("permission requested");
-      iframe.style = "border: 2px dashed black; width: 100%; height: 100%;";
-    });
-    PermissionsTunnel.onPermissionDenied(function () {
-      alert("permission denied");
-      iframe.style = "border: 2px solid red; height: 100px;";
-    });
-    PermissionsTunnel.onPermissionGranted(function () {
-      alert("permission granted");
-      iframe.style = "border: 2px solid green; height: 100px;";
-    });
-  };
-
   var iframeSetup = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
       var output, isPermissionGranted, button;
@@ -1394,12 +1383,11 @@
     return function iframeSetup() {
       return _ref.apply(this, arguments);
     };
-  }();
+  }(); //if (isInIframe) {
 
-  if (isInIframe$1) {
-    ready(iframeSetup);
-  } else {
-    ready(topSetup);
-  }
+
+  ready(iframeSetup); //} else {
+  //ready(topSetup);
+  //}
 
 })));
