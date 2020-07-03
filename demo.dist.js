@@ -1078,6 +1078,16 @@
         return onOrientationChange;
       }()
     }, {
+      key: "notifyPermissionPromptIsShown",
+      value: function notifyPermissionPromptIsShown() {
+        this.triggerCallbacks("permission:prompt-shown");
+      }
+    }, {
+      key: "onPermissionPromptShown",
+      value: function onPermissionPromptShown(cb) {
+        this.registerCallback("permission:prompt-shown", cb);
+      }
+    }, {
       key: "onPermissionRequested",
       value: function onPermissionRequested(cb) {
         this.registerCallback("permission:requested", cb);
@@ -1305,7 +1315,7 @@
     }]);
 
     return PermissionsTunnelClass;
-  }(), (_applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype)), _class);
+  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype)), _class);
   var PermissionsTunnel = new PermissionsTunnelClass();
 
   var ready = function ready(cb) {
@@ -1325,6 +1335,22 @@
 
   window.onerror = function (error) {
     return alert(error);
+  };
+
+  var topSetup = function topSetup() {
+    var iframe = document.getElementById("iframe");
+    PermissionsTunnel.forwardTo(iframe.contentWindow);
+    PermissionsTunnel.onPermissionPromptShown(function () {
+      iframe.style = "border: 2px dashed black; width: 100%; height: 100%;";
+    });
+    PermissionsTunnel.onPermissionDenied(function () {
+      alert("permission denied");
+      iframe.style = "border: 2px solid red; height: 100px;";
+    });
+    PermissionsTunnel.onPermissionGranted(function () {
+      alert("permission granted");
+      iframe.style = "border: 2px solid green; height: 100px;";
+    });
   };
 
   var iframeSetup = /*#__PURE__*/function () {
@@ -1366,6 +1392,7 @@
                   }, _callee);
                 }));
                 document.body.appendChild(button);
+                PermissionsTunnel.notifyPermissionPromptIsShown();
               } else {
                 PermissionsTunnel.onOrientationChange(function (event) {
                   output.innerText = JSON.stringify(event, null, 2);
@@ -1383,11 +1410,12 @@
     return function iframeSetup() {
       return _ref.apply(this, arguments);
     };
-  }(); //if (isInIframe) {
+  }();
 
-
-  ready(iframeSetup); //} else {
-  //ready(topSetup);
-  //}
+  if (isInIframe$1) {
+    ready(iframeSetup);
+  } else {
+    ready(topSetup);
+  }
 
 })));

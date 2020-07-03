@@ -24,8 +24,7 @@ const topSetup = () => {
 
   PermissionsTunnel.forwardTo(iframe.contentWindow);
 
-  PermissionsTunnel.onPermissionRequested(() => {
-    alert("permission requested");
+  PermissionsTunnel.onPermissionPromptShown(() => {
     iframe.style = "border: 2px dashed black; width: 100%; height: 100%;";
   });
 
@@ -59,6 +58,7 @@ const iframeSetup = async () => {
     };
 
     document.body.appendChild(button);
+    PermissionsTunnel.notifyPermissionPromptIsShown();
   } else {
     PermissionsTunnel.onOrientationChange(event => {
       output.innerText = JSON.stringify(event, null, 2);
@@ -66,8 +66,8 @@ const iframeSetup = async () => {
   }
 };
 
-//if (isInIframe) {
-ready(iframeSetup);
-//} else {
-//ready(topSetup);
-//}
+if (isInIframe) {
+  ready(iframeSetup);
+} else {
+  ready(topSetup);
+}

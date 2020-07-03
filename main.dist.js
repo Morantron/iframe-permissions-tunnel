@@ -1079,6 +1079,16 @@
         return onOrientationChange;
       }()
     }, {
+      key: "notifyPermissionPromptIsShown",
+      value: function notifyPermissionPromptIsShown() {
+        this.triggerCallbacks("permission:prompt-shown");
+      }
+    }, {
+      key: "onPermissionPromptShown",
+      value: function onPermissionPromptShown(cb) {
+        this.registerCallback("permission:prompt-shown", cb);
+      }
+    }, {
       key: "onPermissionRequested",
       value: function onPermissionRequested(cb) {
         this.registerCallback("permission:requested", cb);
@@ -1306,7 +1316,7 @@
     }]);
 
     return PermissionsTunnelClass;
-  }(), (_applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype)), _class);
+  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype)), _class);
   var PermissionsTunnel = new PermissionsTunnelClass();
 
   exports.PermissionsTunnel = PermissionsTunnel;

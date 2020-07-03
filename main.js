@@ -83,6 +83,15 @@ export class PermissionsTunnelClass {
     }
   }
 
+  @callOnTopFrame
+  notifyPermissionPromptIsShown() {
+    this.triggerCallbacks("permission:prompt-shown");
+  }
+
+  onPermissionPromptShown(cb) {
+    this.registerCallback("permission:prompt-shown", cb);
+  }
+
   onPermissionRequested(cb) {
     this.registerCallback("permission:requested", cb);
   }
