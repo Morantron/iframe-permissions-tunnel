@@ -24,6 +24,10 @@ const nullPermissionGranter = async () => "granted";
 const permissionGranter =
   DeviceMotionEvent.requestPermission || nullPermissionGranter;
 
+const requiresAskingForPermission = Boolean(
+  DeviceMotionEvent.requestPermission
+);
+
 const serializeEvent = ({ alpha, beta, gamma }) => ({ alpha, beta, gamma });
 
 /**
@@ -119,8 +123,12 @@ export class PermissionsTunnelClass {
   async isPermissionGranted() {
     let result;
 
+    if (!requiresAskingForPermission) {
+      return true;
+    }
+
     try {
-      await timeout(waitForEvent("deviceorientation"), 200);
+      await timeout(waitForEvent("deviceorientation"), 500);
       result = true;
     } catch (e) {
       console.error(e);

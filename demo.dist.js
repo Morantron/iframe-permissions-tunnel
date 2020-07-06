@@ -905,7 +905,6 @@
   };
   var timeout = function timeout(promise, ms) {
     return Promise.race([promise, waitMs(ms).then(function () {
-      console.log("time out");
       throw new Error("TIMEOUT");
     })]);
   };
@@ -950,6 +949,7 @@
   }();
 
   var permissionGranter = DeviceMotionEvent.requestPermission || nullPermissionGranter;
+  var requiresAskingForPermission = Boolean(DeviceMotionEvent.requestPermission);
 
   var serializeEvent = function serializeEvent(_ref2) {
     var alpha = _ref2.alpha,
@@ -1143,30 +1143,38 @@
             while (1) {
               switch (_context5.prev = _context5.next) {
                 case 0:
-                  _context5.prev = 0;
-                  _context5.next = 3;
-                  return timeout(waitForEvent("deviceorientation"), 200);
+                  if (requiresAskingForPermission) {
+                    _context5.next = 2;
+                    break;
+                  }
 
-                case 3:
+                  return _context5.abrupt("return", true);
+
+                case 2:
+                  _context5.prev = 2;
+                  _context5.next = 5;
+                  return timeout(waitForEvent("deviceorientation"), 500);
+
+                case 5:
                   result = true;
-                  _context5.next = 10;
+                  _context5.next = 12;
                   break;
 
-                case 6:
-                  _context5.prev = 6;
-                  _context5.t0 = _context5["catch"](0);
+                case 8:
+                  _context5.prev = 8;
+                  _context5.t0 = _context5["catch"](2);
                   console.error(_context5.t0);
                   result = false;
 
-                case 10:
+                case 12:
                   return _context5.abrupt("return", result);
 
-                case 11:
+                case 13:
                 case "end":
                   return _context5.stop();
               }
             }
-          }, _callee5, null, [[0, 6]]);
+          }, _callee5, null, [[2, 8]]);
         }));
 
         function isPermissionGranted() {
