@@ -93,8 +93,17 @@ export class PermissionsTunnelClass {
     this.triggerCallbacks("permission:prompt-shown");
   }
 
+  @callOnTopFrame
+  notifyPermissionPromptIsHidden() {
+    this.triggerCallbacks("permission:prompt-hidden");
+  }
+
   onPermissionPromptShown(cb) {
     this.registerCallback("permission:prompt-shown", cb);
+  }
+
+  onPermissionPromptHidden(cb) {
+    this.registerCallback("permission:prompt-hidden", cb);
   }
 
   onPermissionRequested(cb) {

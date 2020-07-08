@@ -1084,9 +1084,19 @@
         this.triggerCallbacks("permission:prompt-shown");
       }
     }, {
+      key: "notifyPermissionPromptIsHidden",
+      value: function notifyPermissionPromptIsHidden() {
+        this.triggerCallbacks("permission:prompt-hidden");
+      }
+    }, {
       key: "onPermissionPromptShown",
       value: function onPermissionPromptShown(cb) {
         this.registerCallback("permission:prompt-shown", cb);
+      }
+    }, {
+      key: "onPermissionPromptHidden",
+      value: function onPermissionPromptHidden(cb) {
+        this.registerCallback("permission:prompt-hidden", cb);
       }
     }, {
       key: "onPermissionRequested",
@@ -1324,7 +1334,7 @@
     }]);
 
     return PermissionsTunnelClass;
-  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype)), _class);
+  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsHidden", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsHidden"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype)), _class);
   var PermissionsTunnel = new PermissionsTunnelClass();
 
   var ready = function ready(cb) {
