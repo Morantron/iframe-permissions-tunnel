@@ -221,7 +221,7 @@ export class PermissionsTunnelClass {
   }
 
   triggerCallbacks(callbackName, args = []) {
-    (this.callbacks[callbackName] || []).forEach(cb => cb(args));
+    (this.callbacks[callbackName] || []).forEach(cb => cb(...args));
   }
 }
 

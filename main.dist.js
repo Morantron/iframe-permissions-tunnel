@@ -1329,7 +1329,7 @@
       value: function triggerCallbacks(callbackName) {
         var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
         (this.callbacks[callbackName] || []).forEach(function (cb) {
-          return cb(args);
+          return cb.apply(void 0, _toConsumableArray(args));
         });
       }
     }]);
