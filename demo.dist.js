@@ -909,7 +909,7 @@
     })]);
   };
 
-  var _class;
+  var _window$DeviceMotionE, _window$DeviceMotionE2, _class;
 
   var waitForEvent = function waitForEvent(eventType) {
     return new Promise(function (resolve) {
@@ -948,8 +948,8 @@
     };
   }();
 
-  var permissionGranter = DeviceMotionEvent.requestPermission || nullPermissionGranter;
-  var requiresAskingForPermission = Boolean(DeviceMotionEvent.requestPermission);
+  var permissionGranter = ((_window$DeviceMotionE = window.DeviceMotionEvent) === null || _window$DeviceMotionE === void 0 ? void 0 : _window$DeviceMotionE.requestPermission) || nullPermissionGranter;
+  var requiresAskingForPermission = Boolean((_window$DeviceMotionE2 = window.DeviceMotionEvent) === null || _window$DeviceMotionE2 === void 0 ? void 0 : _window$DeviceMotionE2.requestPermission);
 
   var serializeEvent = function serializeEvent(_ref2) {
     var alpha = _ref2.alpha,
@@ -1145,46 +1145,70 @@
         return setupEventForwarding;
       }()
     }, {
-      key: "isPermissionGranted",
+      key: "isSupported",
       value: function () {
-        var _isPermissionGranted = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
-          var result;
+        var _isSupported = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5() {
           return regeneratorRuntime.wrap(function _callee5$(_context5) {
             while (1) {
               switch (_context5.prev = _context5.next) {
                 case 0:
-                  if (requiresAskingForPermission) {
-                    _context5.next = 2;
-                    break;
-                  }
+                  return _context5.abrupt("return", Boolean(window.DeviceMotionEvent));
 
-                  return _context5.abrupt("return", true);
-
-                case 2:
-                  _context5.prev = 2;
-                  _context5.next = 5;
-                  return timeout(waitForEvent("deviceorientation"), 500);
-
-                case 5:
-                  result = true;
-                  _context5.next = 12;
-                  break;
-
-                case 8:
-                  _context5.prev = 8;
-                  _context5.t0 = _context5["catch"](2);
-                  console.error(_context5.t0);
-                  result = false;
-
-                case 12:
-                  return _context5.abrupt("return", result);
-
-                case 13:
+                case 1:
                 case "end":
                   return _context5.stop();
               }
             }
-          }, _callee5, null, [[2, 8]]);
+          }, _callee5);
+        }));
+
+        function isSupported() {
+          return _isSupported.apply(this, arguments);
+        }
+
+        return isSupported;
+      }()
+    }, {
+      key: "isPermissionGranted",
+      value: function () {
+        var _isPermissionGranted = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+          var result;
+          return regeneratorRuntime.wrap(function _callee6$(_context6) {
+            while (1) {
+              switch (_context6.prev = _context6.next) {
+                case 0:
+                  if (requiresAskingForPermission) {
+                    _context6.next = 2;
+                    break;
+                  }
+
+                  return _context6.abrupt("return", true);
+
+                case 2:
+                  _context6.prev = 2;
+                  _context6.next = 5;
+                  return timeout(waitForEvent("deviceorientation"), 500);
+
+                case 5:
+                  result = true;
+                  _context6.next = 12;
+                  break;
+
+                case 8:
+                  _context6.prev = 8;
+                  _context6.t0 = _context6["catch"](2);
+                  console.error(_context6.t0);
+                  result = false;
+
+                case 12:
+                  return _context6.abrupt("return", result);
+
+                case 13:
+                case "end":
+                  return _context6.stop();
+              }
+            }
+          }, _callee6, null, [[2, 8]]);
         }));
 
         function isPermissionGranted() {
@@ -1196,18 +1220,18 @@
     }, {
       key: "requestPermission",
       value: function () {
-        var _requestPermission = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6() {
+        var _requestPermission = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7() {
           var result;
-          return regeneratorRuntime.wrap(function _callee6$(_context6) {
+          return regeneratorRuntime.wrap(function _callee7$(_context7) {
             while (1) {
-              switch (_context6.prev = _context6.next) {
+              switch (_context7.prev = _context7.next) {
                 case 0:
                   this.triggerCallbacks("permission:requested");
-                  _context6.next = 3;
+                  _context7.next = 3;
                   return permissionGranter();
 
                 case 3:
-                  result = _context6.sent;
+                  result = _context7.sent;
 
                   if (result === "granted") {
                     this.triggerCallbacks("permission:granted");
@@ -1215,14 +1239,14 @@
                     this.triggerCallbacks("permission:denied");
                   }
 
-                  return _context6.abrupt("return", result);
+                  return _context7.abrupt("return", result);
 
                 case 6:
                 case "end":
-                  return _context6.stop();
+                  return _context7.stop();
               }
             }
-          }, _callee6, this);
+          }, _callee7, this);
         }));
 
         function requestPermission() {
@@ -1241,31 +1265,31 @@
         var _this3 = this;
 
         onMessage("method-call", /*#__PURE__*/function () {
-          var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(message) {
+          var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(message) {
             var method, args, result;
-            return regeneratorRuntime.wrap(function _callee7$(_context7) {
+            return regeneratorRuntime.wrap(function _callee8$(_context8) {
               while (1) {
-                switch (_context7.prev = _context7.next) {
+                switch (_context8.prev = _context8.next) {
                   case 0:
                     method = message.method, args = message.args;
-                    _context7.next = 3;
+                    _context8.next = 3;
                     return _this3[method].apply(_this3, _toConsumableArray(args));
 
                   case 3:
-                    result = _context7.sent;
+                    result = _context8.sent;
                     postMessage(_this3.forwardTarget, {
                       type: "method-call-response",
                       id: message.id,
                       result: result
                     });
-                    return _context7.abrupt("return", result);
+                    return _context8.abrupt("return", result);
 
                   case 6:
                   case "end":
-                    return _context7.stop();
+                    return _context8.stop();
                 }
               }
-            }, _callee7);
+            }, _callee8);
           }));
 
           return function (_x2) {
@@ -1334,7 +1358,7 @@
     }]);
 
     return PermissionsTunnelClass;
-  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsHidden", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsHidden"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype)), _class);
+  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsHidden", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsHidden"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isSupported", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isSupported"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype)), _class);
   var PermissionsTunnel = new PermissionsTunnelClass();
 
   var ready = function ready(cb) {

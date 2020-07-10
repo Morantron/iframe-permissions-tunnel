@@ -22,10 +22,10 @@ const isInIframe = (() => {
 const nullPermissionGranter = async () => "granted";
 
 const permissionGranter =
-  DeviceMotionEvent.requestPermission || nullPermissionGranter;
+  window.DeviceMotionEvent?.requestPermission || nullPermissionGranter;
 
 const requiresAskingForPermission = Boolean(
-  DeviceMotionEvent.requestPermission
+  window.DeviceMotionEvent?.requestPermission
 );
 
 const serializeEvent = ({ alpha, beta, gamma }) => ({ alpha, beta, gamma });
@@ -126,6 +126,11 @@ export class PermissionsTunnelClass {
         args: [serializeEvent(event)]
       });
     });
+  }
+
+  @callOnTopFrame
+  async isSupported() {
+    return Boolean(window.DeviceMotionEvent);
   }
 
   @callOnTopFrame
