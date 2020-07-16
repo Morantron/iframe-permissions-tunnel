@@ -955,11 +955,13 @@
   var serializeEvent = function serializeEvent(_ref2) {
     var alpha = _ref2.alpha,
         beta = _ref2.beta,
-        gamma = _ref2.gamma;
+        gamma = _ref2.gamma,
+        absolute = _ref2.absolute;
     return {
       alpha: alpha,
       beta: beta,
-      gamma: gamma
+      gamma: gamma,
+      absolute: absolute
     };
   };
   /**

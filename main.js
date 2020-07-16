@@ -28,7 +28,7 @@ const requiresAskingForPermission = Boolean(
   window.DeviceMotionEvent?.requestPermission
 );
 
-const serializeEvent = ({ alpha, beta, gamma }) => ({ alpha, beta, gamma });
+const serializeEvent = ({ alpha, beta, gamma, absolute }) => ({ alpha, beta, gamma, absolute });
 
 /**
  * Calls the method on the parent iframe
