@@ -956,13 +956,23 @@
     var alpha = _ref2.alpha,
         beta = _ref2.beta,
         gamma = _ref2.gamma,
-        absolute = _ref2.absolute;
-    return {
+        absolute = _ref2.absolute,
+        webkitCompassHeading = _ref2.webkitCompassHeading;
+    var event = {
       alpha: alpha,
       beta: beta,
-      gamma: gamma,
-      absolute: absolute
+      gamma: gamma
     };
+
+    if (absolute !== undefined) {
+      event.absolute = absolute;
+    }
+
+    if (webkitCompassHeading !== undefined) {
+      event.webkitCompassHeading = webkitCompassHeading;
+    }
+
+    return event;
   };
   /**
    * Calls the method on the parent iframe

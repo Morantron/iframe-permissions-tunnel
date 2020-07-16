@@ -30,12 +30,12 @@ const topSetup = () => {
 
   PermissionsTunnel.onPermissionDenied(() => {
     alert("permission denied");
-    iframe.style = "border: 2px solid red; height: 100px;";
+    iframe.style = "border: 2px solid red; height: 300px;";
   });
 
   PermissionsTunnel.onPermissionGranted(() => {
     alert("permission granted");
-    iframe.style = "border: 2px solid green; height: 100px;";
+    iframe.style = "border: 2px solid green; height: 300px;";
   });
 };
 

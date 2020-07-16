@@ -28,7 +28,25 @@ const requiresAskingForPermission = Boolean(
   window.DeviceMotionEvent?.requestPermission
 );
 
-const serializeEvent = ({ alpha, beta, gamma, absolute }) => ({ alpha, beta, gamma, absolute });
+const serializeEvent = ({
+  alpha,
+  beta,
+  gamma,
+  absolute,
+  webkitCompassHeading
+}) => {
+  let event = { alpha, beta, gamma };
+
+  if (absolute !== undefined) {
+    event.absolute = absolute;
+  }
+
+  if (webkitCompassHeading !== undefined) {
+    event.webkitCompassHeading = webkitCompassHeading;
+  }
+
+  return event;
+};
 
 /**
  * Calls the method on the parent iframe
