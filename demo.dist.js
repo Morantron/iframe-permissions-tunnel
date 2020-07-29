@@ -1267,6 +1267,48 @@
 
         return requestPermission;
       }()
+    }, {
+      key: "copyToClipboard",
+      value: function () {
+        var _copyToClipboard = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(text) {
+          var result;
+          return regeneratorRuntime.wrap(function _callee8$(_context8) {
+            while (1) {
+              switch (_context8.prev = _context8.next) {
+                case 0:
+                  console.log("copy to clipboard", text);
+                  _context8.prev = 1;
+                  _context8.next = 4;
+                  return navigator.clipboard.writeText(text);
+
+                case 4:
+                  result = "success";
+                  _context8.next = 11;
+                  break;
+
+                case 7:
+                  _context8.prev = 7;
+                  _context8.t0 = _context8["catch"](1);
+                  console.error(_context8.t0);
+                  result = "error";
+
+                case 11:
+                  return _context8.abrupt("return", result);
+
+                case 12:
+                case "end":
+                  return _context8.stop();
+              }
+            }
+          }, _callee8, null, [[1, 7]]);
+        }));
+
+        function copyToClipboard(_x2) {
+          return _copyToClipboard.apply(this, arguments);
+        }
+
+        return copyToClipboard;
+      }()
       /**
        * This makes the @callOnTopFrame decorator work
        */
@@ -1277,34 +1319,34 @@
         var _this3 = this;
 
         onMessage("method-call", /*#__PURE__*/function () {
-          var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(message) {
+          var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(message) {
             var method, args, result;
-            return regeneratorRuntime.wrap(function _callee8$(_context8) {
+            return regeneratorRuntime.wrap(function _callee9$(_context9) {
               while (1) {
-                switch (_context8.prev = _context8.next) {
+                switch (_context9.prev = _context9.next) {
                   case 0:
                     method = message.method, args = message.args;
-                    _context8.next = 3;
+                    _context9.next = 3;
                     return _this3[method].apply(_this3, _toConsumableArray(args));
 
                   case 3:
-                    result = _context8.sent;
+                    result = _context9.sent;
                     postMessage(_this3.forwardTarget, {
                       type: "method-call-response",
                       id: message.id,
                       result: result
                     });
-                    return _context8.abrupt("return", result);
+                    return _context9.abrupt("return", result);
 
                   case 6:
                   case "end":
-                    return _context8.stop();
+                    return _context9.stop();
                 }
               }
-            }, _callee8);
+            }, _callee9);
           }));
 
-          return function (_x2) {
+          return function (_x3) {
             return _ref5.apply(this, arguments);
           };
         }());
@@ -1370,7 +1412,7 @@
     }]);
 
     return PermissionsTunnelClass;
-  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsHidden", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsHidden"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isSupported", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isSupported"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype)), _class);
+  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsHidden", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsHidden"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isSupported", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isSupported"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "copyToClipboard", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "copyToClipboard"), _class.prototype)), _class);
   var PermissionsTunnel = new PermissionsTunnelClass();
 
   var ready = function ready(cb) {
@@ -1409,21 +1451,22 @@
   };
 
   var iframeSetup = /*#__PURE__*/function () {
-    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
-      var output, isPermissionGranted, button;
-      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
+      var output, isPermissionGranted, button, copyButton;
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
         while (1) {
-          switch (_context2.prev = _context2.next) {
+          switch (_context3.prev = _context3.next) {
             case 0:
               output = document.createElement("pre");
               document.body.appendChild(output);
-              _context2.next = 4;
+              _context3.next = 4;
               return PermissionsTunnel.isPermissionGranted();
 
             case 4:
-              isPermissionGranted = _context2.sent;
+              isPermissionGranted = _context3.sent;
 
               if (!isPermissionGranted) {
+                // request permission button
                 button = document.createElement("button");
                 button.innerText = "Request permission";
                 button.onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
@@ -1445,8 +1488,26 @@
                       }
                     }
                   }, _callee);
+                })); // copy to clipboard button
+
+                copyButton = document.createElement("button");
+                copyButton.innerText = "copy to clipboard";
+                copyButton.onclick = /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+                  return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                    while (1) {
+                      switch (_context2.prev = _context2.next) {
+                        case 0:
+                          PermissionsTunnel.writeText(Math.random());
+
+                        case 1:
+                        case "end":
+                          return _context2.stop();
+                      }
+                    }
+                  }, _callee2);
                 }));
                 document.body.appendChild(button);
+                document.body.appendChild(copyButton);
                 PermissionsTunnel.notifyPermissionPromptIsShown();
               } else {
                 PermissionsTunnel.onOrientationChange(function (event) {
@@ -1456,10 +1517,10 @@
 
             case 6:
             case "end":
-              return _context2.stop();
+              return _context3.stop();
           }
         }
-      }, _callee2);
+      }, _callee3);
     }));
 
     return function iframeSetup() {

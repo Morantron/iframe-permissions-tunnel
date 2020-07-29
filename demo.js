@@ -46,6 +46,7 @@ const iframeSetup = async () => {
   const isPermissionGranted = await PermissionsTunnel.isPermissionGranted();
 
   if (!isPermissionGranted) {
+    // request permission button
     const button = document.createElement("button");
     button.innerText = "Request permission";
 
@@ -57,7 +58,16 @@ const iframeSetup = async () => {
       });
     };
 
+    // copy to clipboard button
+    const copyButton = document.createElement("button");
+    copyButton.innerText = "copy to clipboard";
+
+    copyButton.onclick = async () => {
+      PermissionsTunnel.writeText(Math.random());
+    };
+
     document.body.appendChild(button);
+    document.body.appendChild(copyButton);
     PermissionsTunnel.notifyPermissionPromptIsShown();
   } else {
     PermissionsTunnel.onOrientationChange(event => {

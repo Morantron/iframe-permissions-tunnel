@@ -184,6 +184,22 @@ export class PermissionsTunnelClass {
     return result;
   }
 
+  @callOnTopFrame
+  async copyToClipboard(text) {
+    console.log("copy to clipboard", text);
+
+    let result;
+    try {
+      await navigator.clipboard.writeText(text);
+      result = "success";
+    } catch (e) {
+      console.error(e);
+      result = "error";
+    }
+
+    return result;
+  }
+
   /**
    * This makes the @callOnTopFrame decorator work
    */
