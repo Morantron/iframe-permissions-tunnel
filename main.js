@@ -186,8 +186,6 @@ export class PermissionsTunnelClass {
 
   @callOnTopFrame
   async copyToClipboard(text) {
-    console.log("copy to clipboard", text);
-
     let result;
     try {
       await navigator.clipboard.writeText(text);
@@ -261,6 +259,11 @@ export class PermissionsTunnelClass {
 
   triggerCallbacks(callbackName, args = []) {
     (this.callbacks[callbackName] || []).forEach(cb => cb(...args));
+  }
+
+  @callOnTopFrame
+  sendMessageToParent(callbackName, msg) {
+    this.triggerCallbacks(callbackName, [msg])
   }
 }
 

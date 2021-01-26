@@ -37,14 +37,25 @@ const topSetup = () => {
     alert("permission granted");
     iframe.style = "border: 2px solid green; height: 300px;";
   });
+
+  console.log('registering callback');
+  PermissionsTunnel.registerCallback('custom-event', msg => {
+    console.log('msg', msg);
+  });
 };
 
 const iframeSetup = async () => {
   const output = document.createElement("pre");
   document.body.appendChild(output);
 
-  const isPermissionGranted = await PermissionsTunnel.isPermissionGranted();
+  setInterval(() => {
+    console.log('sending message to parent');
+    PermissionsTunnel.sendMessageToParent('custom-event', {
+      foo: Math.random()
+    });
+  }, 1000);
 
+  const isPermissionGranted = await PermissionsTunnel.isPermissionGranted();
   if (!isPermissionGranted) {
     // request permission button
     const button = document.createElement("button");

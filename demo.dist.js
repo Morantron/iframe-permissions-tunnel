@@ -1276,31 +1276,30 @@
             while (1) {
               switch (_context8.prev = _context8.next) {
                 case 0:
-                  console.log("copy to clipboard", text);
-                  _context8.prev = 1;
-                  _context8.next = 4;
+                  _context8.prev = 0;
+                  _context8.next = 3;
                   return navigator.clipboard.writeText(text);
 
-                case 4:
+                case 3:
                   result = "success";
-                  _context8.next = 11;
+                  _context8.next = 10;
                   break;
 
-                case 7:
-                  _context8.prev = 7;
-                  _context8.t0 = _context8["catch"](1);
+                case 6:
+                  _context8.prev = 6;
+                  _context8.t0 = _context8["catch"](0);
                   console.error(_context8.t0);
                   result = "error";
 
-                case 11:
+                case 10:
                   return _context8.abrupt("return", result);
 
-                case 12:
+                case 11:
                 case "end":
                   return _context8.stop();
               }
             }
-          }, _callee8, null, [[1, 7]]);
+          }, _callee8, null, [[0, 6]]);
         }));
 
         function copyToClipboard(_x2) {
@@ -1409,10 +1408,15 @@
           return cb.apply(void 0, _toConsumableArray(args));
         });
       }
+    }, {
+      key: "sendMessageToParent",
+      value: function sendMessageToParent(callbackName, msg) {
+        this.triggerCallbacks(callbackName, [msg]);
+      }
     }]);
 
     return PermissionsTunnelClass;
-  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsHidden", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsHidden"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isSupported", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isSupported"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "copyToClipboard", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "copyToClipboard"), _class.prototype)), _class);
+  }(), (_applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsShown", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsShown"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "notifyPermissionPromptIsHidden", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "notifyPermissionPromptIsHidden"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "setupEventForwarding", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "setupEventForwarding"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isSupported", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isSupported"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "isPermissionGranted", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "isPermissionGranted"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "requestPermission", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "requestPermission"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "copyToClipboard", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "copyToClipboard"), _class.prototype), _applyDecoratedDescriptor(_class.prototype, "sendMessageToParent", [callOnTopFrame], Object.getOwnPropertyDescriptor(_class.prototype, "sendMessageToParent"), _class.prototype)), _class);
   var PermissionsTunnel = new PermissionsTunnelClass();
 
   var ready = function ready(cb) {
@@ -1448,6 +1452,10 @@
       alert("permission granted");
       iframe.style = "border: 2px solid green; height: 300px;";
     });
+    console.log('registering callback');
+    PermissionsTunnel.registerCallback('custom-event', function (msg) {
+      console.log('msg', msg);
+    });
   };
 
   var iframeSetup = /*#__PURE__*/function () {
@@ -1459,10 +1467,16 @@
             case 0:
               output = document.createElement("pre");
               document.body.appendChild(output);
-              _context3.next = 4;
+              setInterval(function () {
+                console.log('sending message to parent');
+                PermissionsTunnel.sendMessageToParent('custom-event', {
+                  foo: Math.random()
+                });
+              }, 1000);
+              _context3.next = 5;
               return PermissionsTunnel.isPermissionGranted();
 
-            case 4:
+            case 5:
               isPermissionGranted = _context3.sent;
 
               if (!isPermissionGranted) {
@@ -1515,7 +1529,7 @@
                 });
               }
 
-            case 6:
+            case 7:
             case "end":
               return _context3.stop();
           }
