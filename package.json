@@ -17,7 +17,7 @@
     "@rollup/plugin-babel": "^5.0.4",
     "@rollup/plugin-node-resolve": "^8.1.0",
     "rollup": "^2.18.1",
-    "rollup-plugin-serve": "^1.0.1"
+    "rollup-plugin-serve": "^1.0.2"
   },
   "dependencies": {}
 }
